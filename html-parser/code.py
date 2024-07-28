@@ -2,8 +2,9 @@
 
 from enum import Enum
 
+OTHERWISE = '***default***'
 class State(Enum):
-    INIT = 1
+    CONTINUE_SCAN = 1
     HAVE_OPEN_ANGLE = 2
     HAVE_EXCLAMATION = 3
     IN_COMMENT  = 4
@@ -14,19 +15,30 @@ class State(Enum):
     
    
 DFA = {
-    State.INIT: {
+    State.CONTINUE_SCAN: {
         '<': State.HAVE_OPEN_ANGLE,
     },
     State.HAVE_OPEN_ANGLE: {
         '!': State.IN_COMMENT,
-        '*': State.IN_TAG
+        '/': State.CONTINUE_SCAN,
+        OTHERWISE: State.IN_TAG_NAME
+    },
+    State.HAVE_EXCLAMATION: {
+        '>': State.CONTINUE_SCAN,
+        OTHERWISE: State.IN_COMMENT
     },
     State.IN_COMMENT: {
         '!': State.HAVE_EXCLAMATION,
     },
     State.HAVE_EXCLAMATION: {
-        '>': State.INIT,
-        '*': State.IN_COMMENT
+        '>': State.CONTINUE_SCAN,
+        OTHERWISE: State.IN_COMMENT
+    },
+    State.IN_TAG_NAME: {
+        '>': State.IN_TAG_CONTENT
+    },
+    State.IN_TAG_CONTENT: {
+        '<'
     }
 }
 def html_parse():
