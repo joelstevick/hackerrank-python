@@ -83,7 +83,6 @@ def transition(char):
         if OTHERWISE in DFA[state]:
             new_state = DFA[state][OTHERWISE]
     
-    print(f"transition({state}[{char}]) => {new_state}")
     if new_state:
         print(f"{state} => {new_state}")
     
