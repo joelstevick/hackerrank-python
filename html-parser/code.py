@@ -46,14 +46,19 @@ state = State.NULL
 def transition(char):
     global state
     
-    print(f"{state}: checking: {char}")
+    newState = state
+    
     if char in DFA[state]:
         newState = DFA[state][char]
     
-        if newState:
-            print(f"{state} => {newState}")
+    else:
+        if OTHERWISE in DFA[state]:
+            newState = DFA[state][OTHERWISE]
         
-            state = newState
+    if newState != state:
+        print(f"{state} => {newState}")
+    
+        state = newState
     
 def html_parse():
     # read the html
