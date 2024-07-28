@@ -45,7 +45,7 @@ def html_parse():
     # read the html
     html = []
 
-    N = int(input())
+    N = int(input("Enter number of lines: "))
 
     for _ in range(N):
         line = input()
