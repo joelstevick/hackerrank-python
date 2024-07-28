@@ -32,6 +32,19 @@ class TestHtmlParser(unittest.TestCase):
         
         self.assertEqual(context["tags"][1]["name"], "foo")
 
-
+    # can parse a single attribute
+    def test_parse_single_tag(self):
+        html = '<hello foo="bar">World</hello>'
+               
+        context = html_parse(html, {
+            "state": State.NULL,
+            "tags": [],
+            "tag_name": ''
+        })
+        
+        self.assertEqual(len(context["tags"]), 1)
+        
+        self.assertEqual(len(context["tags"][0]["attributes"]), 1)
+        
 if __name__ == '__main__':
     unittest.main()
