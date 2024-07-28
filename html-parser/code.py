@@ -43,22 +43,47 @@ DFA = {
 }
 state = State.NULL
 
+tags = []
+
+tag_name = ''
+
+def IN_TAG_NAME_handler(char):
+    global tag_name
+    
+    tag_name += char
+    
+def IN_TAG_CONTENT_handler(char):
+    tags.append({
+        "name": tag_name,
+        "attributes": []
+    })
+    
+    tag_name = ''
+
+DFA_Handlers = {
+    State.IN_TAG_NAME: IN_TAG_NAME_handler,
+    State.IN_TAG_CONTENT: IN_TAG_CONTENT_handler
+}
+
 def transition(char):
     global state
     
-    newState = state
+    new_state = state
     
     if char in DFA[state]:
-        newState = DFA[state][char]
+        new_state = DFA[state][char]
     
     else:
         if OTHERWISE in DFA[state]:
-            newState = DFA[state][OTHERWISE]
+            new_state = DFA[state][OTHERWISE]
         
-    if newState != state:
-        print(f"{state} => {newState}")
+    if new_state != state:
+        print(f"{state} => {new_state}")
     
-        state = newState
+    if new_state in DFA_Handlers:
+        DFA_Handlers[new_state](char)
+        
+        state = new_state
     
 def html_parse():
     # read the html
@@ -74,6 +99,8 @@ def html_parse():
     # traverse the string
     for char in "".join(html):
         transition(char)
+        
+    print(f"tags = {tags}")
 
 if __name__ == '__main__':
     html_parse()
