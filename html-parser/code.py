@@ -2,13 +2,12 @@
 
 from enum import Enum
 
-class Delimiter(Enum):
-    TAG = 1
-    QUOTE  = 2
-    
-delimiters = {
-    Delimiter.TAG: ['<']
-}
+class State(Enum):
+    INIT = 1
+    IN_COMMENT  = 2
+    IN_TAG = 3
+    IN_QUOTE = 4
+   
 def html_parse():
     # read the html
     html = []
@@ -19,8 +18,8 @@ def html_parse():
         line = input()
         html.append(line)
  
-    print("".join(html))
-            
+    for char in "".join(html):
+        print(char)             
         
     
 
