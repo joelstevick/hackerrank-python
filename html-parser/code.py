@@ -93,6 +93,8 @@ def html_parse(html, context):
     # traverse the string
     for char in "".join(html):
         transition(char, context)
+        
+    return context
                     
 def get_input():
     # read the html
@@ -118,4 +120,3 @@ if __name__ == '__main__':
     
     html_parse(html, context)
     
-    print(f"context={context}")
