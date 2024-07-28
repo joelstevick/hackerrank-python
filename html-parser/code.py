@@ -5,12 +5,12 @@ from enum import Enum
 class State(Enum):
     INIT = 1
     HAVE_OPEN_ANGLE = 2
-    HAVE_EXCLAMATION = 2
-    IN_COMMENT  = 3
-    IN_TAG_NAME = 4
-    IN_TAG_CONTENT = 4
-    IN_ATTRIBUTE_KEY = 5
-    IN_ATTRIBUTE_VALUE = 5
+    HAVE_EXCLAMATION = 3
+    IN_COMMENT  = 4
+    IN_TAG_NAME = 5
+    IN_TAG_CONTENT = 6
+    IN_ATTRIBUTE_KEY = 7
+    IN_ATTRIBUTE_VALUE = 8
     
    
 DFA = {
