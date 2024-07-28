@@ -41,60 +41,60 @@ DFA = {
         '<': State.HAVE_OPEN_ANGLE
     }
 }
-state = State.NULL
 
-tags = []
-
-tag_name = ''
-
-def IN_TAG_NAME_handler(char):
-    global tag_name
+def INSIDE_TAG_NAME_handler(char, context):
     
-    tag_name += char
+    context["tag_name"] += char
     
-def IN_TAG_CONTENT_handler(char):
-    global tag_name
+def START_TAG_NAME_handler(char, context):
     
-    tags.append({
-        "name": tag_name,
+    context["tag_name"] += char
+    
+def START_TAG_CONTENT_handler(_, context):
+    
+    context["tags"].append({
+        "name": context["tag_name"],
         "attributes": []
     })
     
-    tag_name = ''
+    context["tag_name"] = ''
 
 DFA_change_handlers = {
-    State.IN_TAG_NAME: IN_TAG_NAME_handler,
-    State.IN_TAG_CONTENT: IN_TAG_CONTENT_handler
+    State.IN_TAG_NAME: START_TAG_NAME_handler,
+    State.IN_TAG_CONTENT: START_TAG_CONTENT_handler
 }
 
-DFA_steady_state = {
-    State.IN_TAG_NAME: IN_TAG_NAME_handler,
+DFA_steady_state_handlers = {
+    State.IN_TAG_NAME: INSIDE_TAG_NAME_handler,
 }
 # do state transition
-def transition(char):
-    global state
+def transition(char, context):
     
     new_state = None
     
-    if char in DFA[state]:
-        new_state = DFA[state][char]
+    if char in DFA[context["state"]]:
+        new_state = DFA[context["state"]][char]
     
     else:
-        if OTHERWISE in DFA[state]:
-            new_state = DFA[state][OTHERWISE]
+        if OTHERWISE in DFA[context["state"]]:
+            new_state = DFA[context["state"]][OTHERWISE]
     
-    if new_state:
-        print(f"{state} => {new_state}")
-    
+    if new_state:   
         if new_state in DFA_change_handlers:
-            DFA_change_handlers[new_state](char)
+            DFA_change_handlers[new_state](char, context)
         
-        state = new_state
-    elif state in DFA_steady_state:
-            DFA_steady_state[state](char)
+        context["state"] = new_state
+    elif context["state"] in DFA_steady_state_handlers:
+            DFA_steady_state_handlers[context["state"]](char, context)
         
     
-def html_parse():
+def html_parse(html, context):
+    
+    # traverse the string
+    for char in "".join(html):
+        transition(char, context)
+                    
+def get_input():
     # read the html
     html = []
 
@@ -103,13 +103,19 @@ def html_parse():
     for _ in range(N):
         line = input()
         html.append(line)
- 
-    
-    # traverse the string
-    for char in "".join(html):
-        transition(char)
         
-    print(f"tags = {tags}")
+    return "".join(html)
+ 
 
 if __name__ == '__main__':
-    html_parse()
+    html = get_input()
+    
+    context = {
+        "state": State.NULL,
+        "tags": [],
+        "tag_name": ''
+    }
+    
+    html_parse(html, context)
+    
+    print(f"context={context}")
