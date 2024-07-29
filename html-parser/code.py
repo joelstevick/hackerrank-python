@@ -50,7 +50,8 @@ DFA = {
         '<': State.HAVE_OPEN_ANGLE
     },
     State.PARSE_ATTRIBUTE_NAME: {
-        '=': State.PARSE_ATTRIBUTE_ASSIGNMENT
+        '=': State.PARSE_ATTRIBUTE_ASSIGNMENT,
+        '/': State.PARSE_TAG_NAME
     },
     State.PARSE_ATTRIBUTE_ASSIGNMENT: {
         '"': State.PARSE_ATTRIBUTE_VALUE_QUOTE
@@ -71,7 +72,8 @@ DFA = {
 
 # state transition handlers
 def PARSE_TAG_NAME_handler(char, context):
-    context["tag_name"] += char
+    if char != '/':
+        context["tag_name"] += char
 
 def COLLECT_TAG_NAME_handler(char, context):   
     context["tag_name"] += char

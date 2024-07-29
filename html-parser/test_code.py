@@ -33,7 +33,6 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][0]["name"], "hello")
         
     # can parse a self terminating tag with a space
-    @pytest.mark.only
     def test_parse_self_terminating_tag(self):
         html = '<hello />'
                
