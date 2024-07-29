@@ -124,10 +124,20 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(len(context["tags"]), 4)
         self.assertEqual(context["tags"][0]["name"], "head")
         self.assertEqual(context["tags"][1]["name"], "title")
+
         self.assertEqual(context["tags"][2]["name"], "object")
         self.assertEqual(context["tags"][2]["attributes"][0]['name'], "type")
         self.assertEqual(context["tags"][2]["attributes"][0]['value'], "application/x-flash")
+        self.assertEqual(context["tags"][2]["attributes"][1]['name'], "data")
+        self.assertEqual(context["tags"][2]["attributes"][1]['value'], "your-file.swf")
+        self.assertEqual(context["tags"][2]["attributes"][2]['name'], "width")
+        self.assertEqual(context["tags"][2]["attributes"][2]['value'], "0")
+        self.assertEqual(context["tags"][2]["attributes"][3]['name'], "height")
+        self.assertEqual(context["tags"][2]["attributes"][3]['value'], "0")
+
         self.assertEqual(context["tags"][3]["name"], "param")
+        self.assertEqual(context["tags"][3]["attributes"][0]['name'], "quality")
+        self.assertEqual(context["tags"][3]["attributes"][0]['value'], "high")
 
 
  
