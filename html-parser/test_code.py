@@ -43,5 +43,17 @@ class TestHtmlParser(unittest.TestCase):
         
         self.assertEqual(len(context["tags"][0]["attributes"]), 1)
         
+    # can parse nested tags
+    def test_parse_multiple_tags(self):
+        html = '<hello>World<foo>bar</foo></hello>'
+               
+        context = html_parse(html, self.initial_context)
+
+        self.assertEqual(len(context["tags"]), 2)
+        
+        self.assertEqual(context["tags"][0]["name"], "hello")
+        
+        self.assertEqual(context["tags"][1]["name"], "foo")
+
 if __name__ == '__main__':
     unittest.main()
