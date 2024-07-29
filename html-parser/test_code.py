@@ -125,6 +125,8 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][0]["name"], "head")
         self.assertEqual(context["tags"][1]["name"], "title")
         self.assertEqual(context["tags"][2]["name"], "object")
+        self.assertEqual(context["tags"][2]["attributes"][0]['name'], "type")
+        self.assertEqual(context["tags"][2]["attributes"][0]['value'], "application/x-flash")
         self.assertEqual(context["tags"][3]["name"], "param")
 
 
