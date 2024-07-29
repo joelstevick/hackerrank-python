@@ -13,9 +13,8 @@ class State(Enum):
     PARSE_TAG_CONTENT = 8
     IN_ATTRIBUTE_NAME = 9
     IN_ATTRIBUTE_VALUE = 10
-    PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR = 11
     PARSE_ATTRIBUTE_VALUE = 12
-    ADD_ATTRIBUTE=13
+    ADD_ATTRIBUTE = 13
 
    
 DFA = {
@@ -42,14 +41,13 @@ DFA = {
         '<': State.HAVE_OPEN_ANGLE
     },
     State.PARSE_ATTRIBUTE_NAME: {
-        '"': State.PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR
-    },
-    State.PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR: {
         '"': State.PARSE_ATTRIBUTE_VALUE
     },
     State.PARSE_ATTRIBUTE_VALUE: {
         '"': State.ADD_ATTRIBUTE
-
+    },
+    State.ADD_ATTRIBUTE: {
+        
     }
 }
 
@@ -76,7 +74,7 @@ def ADD_TAG_handler(_, context):
   
     context["tags"].append({
         "name": context["tag_name"],
-        "attributes": []
+        "attributes": context["attributes"]
     })
     
     context["tag_name"] = ''
@@ -88,8 +86,8 @@ def ADD_ATTRIBUTE_handler(_, context):
     
     context["attribute_name"] = ""
     context["attribute_value"] = ""
-    
-    context["attributes"].push(attribute)
+       
+    context["attributes"].append(attribute)
     
     context["state"] = State.PARSE_TAG_NAME
 
@@ -109,7 +107,7 @@ DFA_steady_state_handlers = {
 }
 # do state transition
 def transition(char, context):
-    
+      
     new_state = None
     
     if char in DFA[context["state"]]:
@@ -157,6 +155,8 @@ if __name__ == '__main__':
         "tags": [],
         "tag_name": '',
         "attribute_name": '',
+        "attribute_value": '',
+        "attributes": []
     }
     
     html_parse(html, context)
