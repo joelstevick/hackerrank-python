@@ -193,7 +193,4 @@ if __name__ == '__main__':
     html_parse(html, context)
     
     print_for_hackerrank(context)
-    
-    print("=======")
-    print(context)
-    
+        
