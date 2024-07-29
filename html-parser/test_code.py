@@ -12,7 +12,7 @@ class TestHtmlParser(unittest.TestCase):
         print("")
 
     # can parse a single tag
-    def xxxtest_parse_single_tag(self):
+    def test_parse_single_tag(self):
         html = '<hello>World</hello>'
                
         context = html_parse(html, self.initial_context)
@@ -22,7 +22,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][0]["name"], "hello")
         
     # can parse multiple tags
-    def xxxtest_parse_multiple_tags(self):
+    def test_parse_multiple_tags(self):
         html = '<hello>World</hello><foo>bar</foo>'
                
         context = html_parse(html, self.initial_context)
