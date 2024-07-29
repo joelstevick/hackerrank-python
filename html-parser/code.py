@@ -163,7 +163,12 @@ def html_parse(html, context):
             
 def print_for_hackerrank(context): 
     for tag in context["tags"]:
+        # tag name
         print(f"{tag['name']}")     
+        
+        # attributes
+        for attribute in tag["attributes"]:
+            print(f"-> {attribute['name']}" + f"{(' > ' + attribute['value']) if len(attribute['value']) > 0 else '' }")
         
 def get_input():
     # read the html
