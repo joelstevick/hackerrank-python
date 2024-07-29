@@ -98,6 +98,8 @@ def ADD_ATTRIBUTE_handler(_, context):
     context["attributes"].append(attribute)
     
     context["state"] = State.PARSE_TAG_NAME
+    
+    print(f"ADD_ATTRIBUTE_handler ===> {context['state']}, {context['attributes']}")
 
 DFA_change_handlers = {
     State.PARSE_TAG_NAME: PARSE_TAG_NAME_handler,
