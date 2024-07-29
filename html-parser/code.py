@@ -174,7 +174,7 @@ def get_input():
     # read the html
     html = []
 
-    N = int(input("Enter number of lines: "))
+    N = int(input(""))
 
     for _ in range(N):
         line = input()
