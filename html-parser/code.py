@@ -73,7 +73,7 @@ def COLLECT_ATTRIBUTE_NAME_handler(char, context):
     context["attribute_name"] += char
     
 def PARSE_ATTRIBUTE_VALUE_handler(char, context):
-    context["attribute_value"] = ''
+    context["attribute_value"] = char
 
 def COLLECT_ATTRIBUTE_VALUE_handler(char, context):
     context["attribute_value"] += char
