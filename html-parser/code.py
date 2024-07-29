@@ -6,7 +6,7 @@ OTHERWISE = ''
 class State(Enum):
     NULL = 1
     HAVE_OPEN_ANGLE = 2
-    HAVE_EXCLAMATION = 3
+    HAVE_COMMENT_TERMINATOR_1 = 3
     PARSE_COMMENT  = 4
     PARSE_TAG_NAME = 5
     PARSE_ATTRIBUTE_NAME = 6
@@ -17,6 +17,7 @@ class State(Enum):
     ADD_ATTRIBUTE = 13
     PARSE_ATTRIBUTE_ASSIGNMENT = 14
     PARSE_ATTRIBUTE_VALUE_QUOTE = 15
+    HAVE_COMMENT_TERMINATOR_2 = 16
 
 # DFA   
 DFA = {
@@ -29,9 +30,13 @@ DFA = {
         OTHERWISE: State.PARSE_TAG_NAME
     },
     State.PARSE_COMMENT: {
-        '!': State.HAVE_EXCLAMATION,
+        '-': State.HAVE_COMMENT_TERMINATOR_1,
     },
-    State.HAVE_EXCLAMATION: {
+    State.HAVE_COMMENT_TERMINATOR_1: {
+        '-': State.HAVE_COMMENT_TERMINATOR_2,
+        OTHERWISE: State.PARSE_COMMENT
+    },
+    State.HAVE_COMMENT_TERMINATOR_2: {
         '>': State.NULL,
         OTHERWISE: State.PARSE_COMMENT
     },
