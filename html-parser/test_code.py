@@ -136,8 +136,10 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][2]["attributes"][3]['value'], "0")
 
         self.assertEqual(context["tags"][3]["name"], "param")
-        self.assertEqual(context["tags"][3]["attributes"][0]['name'], "quality")
-        self.assertEqual(context["tags"][3]["attributes"][0]['value'], "high")
+        self.assertEqual(context["tags"][3]["attributes"][0]['name'], "name")
+        self.assertEqual(context["tags"][3]["attributes"][0]['value'], "quality")
+        self.assertEqual(context["tags"][3]["attributes"][1]['name'], "name")
+        self.assertEqual(context["tags"][3]["attributes"][1]['value'], "quality")
 
 
  
