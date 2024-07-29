@@ -23,8 +23,6 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][0]["name"], "hello")
     
     # can parse a self terminating tag
-    @pytest.mark.only
-
     def test_parse_self_terminating_tag(self):
         html = '<hello/>'
                
@@ -108,6 +106,8 @@ class TestHtmlParser(unittest.TestCase):
                     </object>
                 '''
         context = html_parse(html, self.initial_context)
+        self.assertEqual(len(context["tags"]), 4)
+
  
 if __name__ == '__main__':
     unittest.main()
