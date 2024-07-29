@@ -130,10 +130,11 @@ def transition(char, context):
 
     if new_state:   
 
+        context["state"] = new_state
+
         if new_state in DFA_change_handlers:
             DFA_change_handlers[new_state](char, context)
         
-        context["state"] = new_state
     elif context["state"] in DFA_steady_state_handlers:
             DFA_steady_state_handlers[context["state"]](char, context)
         
