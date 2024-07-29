@@ -96,6 +96,7 @@ def ADD_TAG_handler(_, context):
     })
     
     context["tag_name"] = ''
+    context["attributes"] = []
 
 def ADD_ATTRIBUTE_handler(_, context):
     attribute = {}

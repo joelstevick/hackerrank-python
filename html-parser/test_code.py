@@ -89,7 +89,7 @@ class TestHtmlParser(unittest.TestCase):
         context = html_parse(html, self.initial_context)
 
         self.assertEqual(len(context["tags"][1]["attributes"]), 1)
-        self.assertEqual(context["tags"][0]["attributes"][0]["value"], "bar2")
+        self.assertEqual(context["tags"][1]["attributes"][0]["value"], "bar2")
 
     # can parse comment
     def test_parse_comment(self):
@@ -120,7 +120,7 @@ class TestHtmlParser(unittest.TestCase):
                     </object>
                 '''
         context = html_parse(html, self.initial_context)
-        
+            
         self.assertEqual(len(context["tags"]), 4)
         self.assertEqual(context["tags"][0]["name"], "head")
         self.assertEqual(context["tags"][1]["name"], "title")
