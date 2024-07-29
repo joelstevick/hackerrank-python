@@ -18,6 +18,7 @@ class State(Enum):
     PARSE_ATTRIBUTE_ASSIGNMENT = 14
     PARSE_ATTRIBUTE_VALUE_QUOTE = 15
     HAVE_COMMENT_TERMINATOR_2 = 16
+    ADD_SELF_TERMINATING_TAG = 17
 
 # DFA   
 DFA = {
@@ -42,6 +43,7 @@ DFA = {
     },
     State.PARSE_TAG_NAME: {
         '>': State.PARSE_TAG_CONTENT,
+        '/': State.ADD_SELF_TERMINATING_TAG,
         ' ': State.PARSE_ATTRIBUTE_NAME
     },
     State.PARSE_TAG_CONTENT: {
@@ -61,6 +63,9 @@ DFA = {
     },
     State.ADD_ATTRIBUTE: {
         
+    },
+    State.ADD_SELF_TERMINATING_TAG: {
+        '>': State.NULL
     }
 }
 
@@ -108,6 +113,7 @@ def ADD_ATTRIBUTE_handler(_, context):
 DFA_change_handlers = {
     State.PARSE_TAG_NAME: PARSE_TAG_NAME_handler,
     State.PARSE_TAG_CONTENT: ADD_TAG_handler,
+    State.ADD_SELF_TERMINATING_TAG: ADD_TAG_handler,
     State.PARSE_ATTRIBUTE_NAME: PARSE_ATTRIBUTE_NAME_handler,
     State.PARSE_ATTRIBUTE_VALUE: PARSE_ATTRIBUTE_VALUE_handler,
     State.ADD_ATTRIBUTE: ADD_ATTRIBUTE_handler
