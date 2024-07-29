@@ -15,6 +15,7 @@ class State(Enum):
     IN_ATTRIBUTE_VALUE = 10
     PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR = 11
     PARSE_ATTRIBUTE_VALUE = 12
+    ADD_ATTRIBUTE=13
 
    
 DFA = {
@@ -44,26 +45,35 @@ DFA = {
         '"': State.PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR
     },
     State.PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR: {
+        '"': State.PARSE_ATTRIBUTE_VALUE
     },
+    State.PARSE_ATTRIBUTE_VALUE: {
+        '"': State.ADD_ATTRIBUTE
+
+    }
 }
 
 # state transition handlers
-def START_TAG_NAME_handler(char, context):
-    
+def PARSE_TAG_NAME_handler(char, context):
     context["tag_name"] += char
 
-def START_TAG_NAME_handler(char, context):
-    
+def COLLECT_TAG_NAME_handler(char, context):   
     context["tag_name"] += char
     
-def START_ATTRIBUTE_NAME_handler(char, context):
+def PARSE_ATTRIBUTE_NAME_handler(char, context):
     context["attribute_name"] = ''
-
-def START_ATTRIBUTE_VALUE_handler(char, context):
+    
+def COLLECT_ATTRIBUTE_NAME_handler(char, context):
+    context["attribute_name"] += char
+    
+def PARSE_ATTRIBUTE_VALUE_handler(char, context):
     context["attribute_value"] = ''
 
-def START_TAG_CONTENT_handler(_, context):
+def COLLECT_ATTRIBUTE_VALUE_handler(char, context):
+    context["attribute_value"] += char
     
+def ADD_TAG_handler(_, context):
+  
     context["tags"].append({
         "name": context["tag_name"],
         "attributes": []
@@ -71,15 +81,31 @@ def START_TAG_CONTENT_handler(_, context):
     
     context["tag_name"] = ''
 
+def ADD_ATTRIBUTE_handler(_, context):
+    attribute = {}
+    attribute["name"]=context["attribute_name"]
+    attribute["value"]=context["attribute_value"]
+    
+    context["attribute_name"] = ""
+    context["attribute_value"] = ""
+    
+    context["attributes"].push(attribute)
+    
+    context["state"] = State.PARSE_TAG_NAME
+
 DFA_change_handlers = {
-    State.PARSE_TAG_NAME: START_TAG_NAME_handler,
-    State.PARSE_TAG_CONTENT: START_TAG_CONTENT_handler,
-    State.PARSE_ATTRIBUTE_NAME: START_ATTRIBUTE_NAME_handler,
-    State.PARSE_ATTRIBUTE_VALUE: START_ATTRIBUTE_VALUE_handler
+    State.PARSE_TAG_NAME: PARSE_TAG_NAME_handler,
+    State.PARSE_TAG_CONTENT: ADD_TAG_handler,
+    State.PARSE_ATTRIBUTE_NAME: PARSE_ATTRIBUTE_NAME_handler,
+    State.PARSE_ATTRIBUTE_VALUE: PARSE_ATTRIBUTE_VALUE_handler,
+    State.ADD_ATTRIBUTE: ADD_ATTRIBUTE_handler
 }
 
 DFA_steady_state_handlers = {
-    State.PARSE_TAG_NAME: START_TAG_NAME_handler,
+    State.PARSE_TAG_NAME: COLLECT_TAG_NAME_handler,
+    State.PARSE_ATTRIBUTE_NAME: COLLECT_ATTRIBUTE_NAME_handler,
+    State.PARSE_ATTRIBUTE_VALUE: COLLECT_ATTRIBUTE_VALUE_handler,
+
 }
 # do state transition
 def transition(char, context):
