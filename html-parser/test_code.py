@@ -106,7 +106,13 @@ class TestHtmlParser(unittest.TestCase):
                     </object>
                 '''
         context = html_parse(html, self.initial_context)
+        
         self.assertEqual(len(context["tags"]), 4)
+        self.assertEqual(context["tags"][0]["name"], "head")
+        self.assertEqual(context["tags"][1]["name"], "title")
+        self.assertEqual(context["tags"][2]["name"], "object")
+        self.assertEqual(context["tags"][3]["name"], "param")
+
 
  
 if __name__ == '__main__':

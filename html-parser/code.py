@@ -91,7 +91,7 @@ def COLLECT_ATTRIBUTE_VALUE_handler(char, context):
 def ADD_TAG_handler(_, context):
   
     context["tags"].append({
-        "name": context["tag_name"],
+        "name": context["tag_name"].strip(),
         "attributes": context["attributes"]
     })
     
@@ -99,7 +99,7 @@ def ADD_TAG_handler(_, context):
 
 def ADD_ATTRIBUTE_handler(_, context):
     attribute = {}
-    attribute["name"]=context["attribute_name"]
+    attribute["name"]=context["attribute_name"].strip()
     attribute["value"]=context["attribute_value"]
     
     context["attribute_name"] = ""
