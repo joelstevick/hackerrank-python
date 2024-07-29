@@ -7,49 +7,61 @@ class State(Enum):
     NULL = 1
     HAVE_OPEN_ANGLE = 2
     HAVE_EXCLAMATION = 3
-    IN_COMMENT  = 4
-    IN_TAG_NAME = 5
-    IN_TAG_CONTENT = 6
-    IN_ATTRIBUTE_KEY = 7
-    IN_ATTRIBUTE_VALUE = 8
-    
+    PARSE_COMMENT  = 4
+    PARSE_TAG_NAME = 5
+    PARSE_ATTRIBUTE_NAME = 6
+    PARSE_TAG_CONTENT = 8
+    IN_ATTRIBUTE_NAME = 9
+    IN_ATTRIBUTE_VALUE = 10
+    PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR = 11
+    PARSE_ATTRIBUTE_VALUE = 12
+
    
 DFA = {
     State.NULL: {
         '<': State.HAVE_OPEN_ANGLE,
     },
     State.HAVE_OPEN_ANGLE: {
-        '!': State.IN_COMMENT,
+        '!': State.PARSE_COMMENT,
         '/': State.NULL,
-        OTHERWISE: State.IN_TAG_NAME
+        OTHERWISE: State.PARSE_TAG_NAME
     },
-    State.HAVE_EXCLAMATION: {
-        '>': State.NULL,
-        OTHERWISE: State.IN_COMMENT
-    },
-    State.IN_COMMENT: {
+    State.PARSE_COMMENT: {
         '!': State.HAVE_EXCLAMATION,
     },
     State.HAVE_EXCLAMATION: {
         '>': State.NULL,
-        OTHERWISE: State.IN_COMMENT
+        OTHERWISE: State.PARSE_COMMENT
     },
-    State.IN_TAG_NAME: {
-        '>': State.IN_TAG_CONTENT
+    State.PARSE_TAG_NAME: {
+        '>': State.PARSE_TAG_CONTENT,
+        ' ': State.PARSE_ATTRIBUTE_NAME
     },
-    State.IN_TAG_CONTENT: {
+    State.PARSE_TAG_CONTENT: {
         '<': State.HAVE_OPEN_ANGLE
-    }
+    },
+    State.PARSE_ATTRIBUTE_NAME: {
+        '"': State.PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR
+    },
+    State.PARSE_ATTRIBUTE_ASSIGNMENT_OPERATOR: {
+    },
 }
 
-def INSIDE_TAG_NAME_handler(char, context):
+# state transition handlers
+def START_TAG_NAME_handler(char, context):
     
     context["tag_name"] += char
-    
+
 def START_TAG_NAME_handler(char, context):
     
     context["tag_name"] += char
     
+def START_ATTRIBUTE_NAME_handler(char, context):
+    context["attribute_name"] = ''
+
+def START_ATTRIBUTE_VALUE_handler(char, context):
+    context["attribute_value"] = ''
+
 def START_TAG_CONTENT_handler(_, context):
     
     context["tags"].append({
@@ -60,12 +72,14 @@ def START_TAG_CONTENT_handler(_, context):
     context["tag_name"] = ''
 
 DFA_change_handlers = {
-    State.IN_TAG_NAME: START_TAG_NAME_handler,
-    State.IN_TAG_CONTENT: START_TAG_CONTENT_handler
+    State.PARSE_TAG_NAME: START_TAG_NAME_handler,
+    State.PARSE_TAG_CONTENT: START_TAG_CONTENT_handler,
+    State.PARSE_ATTRIBUTE_NAME: START_ATTRIBUTE_NAME_handler,
+    State.PARSE_ATTRIBUTE_VALUE: START_ATTRIBUTE_VALUE_handler
 }
 
 DFA_steady_state_handlers = {
-    State.IN_TAG_NAME: INSIDE_TAG_NAME_handler,
+    State.PARSE_TAG_NAME: START_TAG_NAME_handler,
 }
 # do state transition
 def transition(char, context):
@@ -115,7 +129,8 @@ if __name__ == '__main__':
     context = {
         "state": State.NULL,
         "tags": [],
-        "tag_name": ''
+        "tag_name": '',
+        "attribute_name": '',
     }
     
     html_parse(html, context)

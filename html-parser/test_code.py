@@ -33,7 +33,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][1]["name"], "foo")
 
     # can parse a single attribute
-    def test_parse_single_tag(self):
+    def test_parse_single_attribute(self):
         html = '<hello foo="bar">World</hello>'
                
         context = html_parse(html, {
