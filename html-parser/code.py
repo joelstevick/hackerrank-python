@@ -158,7 +158,11 @@ def html_parse(html, context):
         transition(char, context)
         
     return context
-                    
+            
+def print_for_hackerrank(context): 
+    for tag in context["tags"]:
+        print(f"{tag['name']}")     
+        
 def get_input():
     # read the html
     html = []
@@ -185,4 +189,9 @@ if __name__ == '__main__':
     }
     
     html_parse(html, context)
+    
+    print_for_hackerrank(context)
+    
+    print("=======")
+    print(context)
     
