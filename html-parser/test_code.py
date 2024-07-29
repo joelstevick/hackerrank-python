@@ -42,6 +42,8 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(len(context["tags"]), 1)
         
         self.assertEqual(len(context["tags"][0]["attributes"]), 1)
+        self.assertEqual(context["tags"][0]["attributes"][0]["value"], "bar")
+
         
     # can parse nested tags
     def test_parse_nested_tags(self):
@@ -62,6 +64,8 @@ class TestHtmlParser(unittest.TestCase):
         context = html_parse(html, self.initial_context)
 
         self.assertEqual(len(context["tags"][1]["attributes"]), 1)
+        self.assertEqual(context["tags"][0]["attributes"][0]["value"], "bar2")
+
 
 if __name__ == '__main__':
     unittest.main()
