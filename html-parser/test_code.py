@@ -12,7 +12,7 @@ class TestHtmlParser(unittest.TestCase):
         print("")
 
     # can parse a single tag
-    def xtest_parse_single_tag(self):
+    def test_parse_single_tag(self):
         html = '<hello>World</hello>'
                
         context = html_parse(html, self.initial_context)
@@ -22,7 +22,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][0]["name"], "hello")
         
     # can parse multiple tags
-    def xtest_parse_multiple_tags(self):
+    def test_parse_multiple_tags(self):
         html = '<hello>World</hello><foo>bar</foo>'
                
         context = html_parse(html, self.initial_context)
@@ -34,7 +34,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][1]["name"], "foo")
 
     # can parse a single attribute
-    def xtest_parse_single_attribute(self):
+    def test_parse_single_attribute(self):
         html = '<hello foo="bar">World</hello>'
                
         context = html_parse(html, self.initial_context)
@@ -46,7 +46,7 @@ class TestHtmlParser(unittest.TestCase):
 
         
     # can parse nested tags
-    def xtest_parse_nested_tags(self):
+    def test_parse_nested_tags(self):
         html = '<hello>World<foo>bar</foo></hello>'
                
         context = html_parse(html, self.initial_context)
@@ -58,7 +58,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][1]["name"], "foo")
 
     # can parse attribute from nested tag
-    def xxstest_parse_nested_attribute(self):
+    def test_parse_nested_attribute(self):
         html = '<hello>World<foo foo2="bar2">bar</foo></hello>'
                
         context = html_parse(html, self.initial_context)
@@ -67,7 +67,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][0]["attributes"][0]["value"], "bar2")
 
     # can parse comment
-    def xtest_parse_comment(self):
+    def test_parse_comment(self):
         html = '<!-- <hello>World<foo foo2="bar2">bar</foo></hello> -->'
                
         context = html_parse(html, self.initial_context)
