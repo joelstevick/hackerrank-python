@@ -131,7 +131,7 @@ def transition(char, context):
         if OTHERWISE in DFA[context["state"]]:
             new_state = DFA[context["state"]][OTHERWISE]
     
-    print(f"{context['state']} => {new_state}, char='{char}'")
+    # print(f"{context['state']} => {new_state}, char='{char}'")
 
     if new_state:   
 

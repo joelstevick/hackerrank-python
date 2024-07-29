@@ -1,4 +1,5 @@
 import unittest
+import pytest
 from code import html_parse, State
 
 class TestHtmlParser(unittest.TestCase):
@@ -14,6 +15,18 @@ class TestHtmlParser(unittest.TestCase):
     # can parse a single tag
     def test_parse_single_tag(self):
         html = '<hello>World</hello>'
+               
+        context = html_parse(html, self.initial_context)
+        
+        self.assertEqual(len(context["tags"]), 1)
+        
+        self.assertEqual(context["tags"][0]["name"], "hello")
+    
+    # can parse a self terminating tag
+    @pytest.mark.only
+
+    def test_parse_self_terminating_tag(self):
+        html = '<hello/>'
                
         context = html_parse(html, self.initial_context)
         
@@ -82,5 +95,19 @@ class TestHtmlParser(unittest.TestCase):
 
         self.assertEqual(len(context["tags"]), 1)
 
+    # can pass hackerrank sample test
+    def test_hackerrank_sample(self):
+        html = '''  <head>
+                    <title>HTML</title>
+                    </head>
+                    <object type="application/x-flash"
+                    data="your-file.swf"
+                    width="0" height="0">
+                    <!-- <param name="movie" value="your-file.swf" /> -->
+                    <param name="quality" value="high"/>
+                    </object>
+                '''
+        context = html_parse(html, self.initial_context)
+ 
 if __name__ == '__main__':
     unittest.main()
