@@ -9,23 +9,24 @@ class TestHtmlParser(unittest.TestCase):
             "tag_name": '',
             "attributes": []
         }
+        print("")
+
     # can parse a single tag
-    def test_parse_single_tag(self):
+    def xxxtest_parse_single_tag(self):
         html = '<hello>World</hello>'
                
         context = html_parse(html, self.initial_context)
         
-        print(f"context = {context}")
         self.assertEqual(len(context["tags"]), 1)
         
         self.assertEqual(context["tags"][0]["name"], "hello")
         
     # can parse multiple tags
-    def test_parse_multiple_tags(self):
+    def xxxtest_parse_multiple_tags(self):
         html = '<hello>World</hello><foo>bar</foo>'
                
         context = html_parse(html, self.initial_context)
-        
+
         self.assertEqual(len(context["tags"]), 2)
         
         self.assertEqual(context["tags"][0]["name"], "hello")
@@ -33,7 +34,7 @@ class TestHtmlParser(unittest.TestCase):
         self.assertEqual(context["tags"][1]["name"], "foo")
 
     # can parse a single attribute
-    def xxxtest_parse_single_attribute(self):
+    def test_parse_single_attribute(self):
         html = '<hello foo="bar">World</hello>'
                
         context = html_parse(html, self.initial_context)

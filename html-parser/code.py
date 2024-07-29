@@ -15,8 +15,10 @@ class State(Enum):
     IN_ATTRIBUTE_VALUE = 10
     PARSE_ATTRIBUTE_VALUE = 12
     ADD_ATTRIBUTE = 13
+    PARSE_ATTRIBUTE_ASSIGNMENT = 14
+    PARSE_ATTRIBUTE_VALUE_QUOTE = 15
 
-   
+# DFA   
 DFA = {
     State.NULL: {
         '<': State.HAVE_OPEN_ANGLE,
@@ -41,7 +43,13 @@ DFA = {
         '<': State.HAVE_OPEN_ANGLE
     },
     State.PARSE_ATTRIBUTE_NAME: {
-        '"': State.PARSE_ATTRIBUTE_VALUE
+        '=': State.PARSE_ATTRIBUTE_ASSIGNMENT
+    },
+    State.PARSE_ATTRIBUTE_ASSIGNMENT: {
+        '"': State.PARSE_ATTRIBUTE_VALUE_QUOTE
+    },
+    State.PARSE_ATTRIBUTE_VALUE_QUOTE: {
+        OTHERWISE: State.PARSE_ATTRIBUTE_VALUE  
     },
     State.PARSE_ATTRIBUTE_VALUE: {
         '"': State.ADD_ATTRIBUTE
@@ -117,7 +125,10 @@ def transition(char, context):
         if OTHERWISE in DFA[context["state"]]:
             new_state = DFA[context["state"]][OTHERWISE]
     
+    print(f"{context['state']} => {new_state}, char='{char}'")
+
     if new_state:   
+
         if new_state in DFA_change_handlers:
             DFA_change_handlers[new_state](char, context)
         
