@@ -17,8 +17,14 @@ def is_vowel(string):
 
 root = {}
 
+current = 0
 
 def add_node(char, parent):
+    global current
+
+    current += 1
+
+    print(f"{current:,}", end="\r")
     node = parent.get(char)
     if node == None:
         node = {
@@ -35,6 +41,7 @@ def build_tree(string):
     global root
     global stuart
     global kevin
+
 
     for i in range(len(string)):
         parent = None
