@@ -8,86 +8,57 @@ vowels = {
 stuart = 0
 kevin = 0
 
-COUNT = "@*c*@"
-
 
 def is_vowel(string):
     return vowels.get(string[0]) == True
 
 
-root = {}
-
-current = 0
-
-def add_node(char, parent):
-    global current
-
-    current += 1
-
-    print(f"{current:,}", end="\r")
-    node = parent.get(char)
-    if node == None:
-        node = {
-            COUNT: 1
-        }
-        parent[char] = node
-    else:
-        node[COUNT] += 1
-
-    return node
-
-
-def build_tree(string):
-    global root
-    global stuart
+def scan(string):
     global kevin
+    global stuart
 
+    freq_stuart = {}
+    freq_kevin = {}
 
     for i in range(len(string)):
-        parent = None
-        for j in range(len(string) - i):
-            char = string[i + j]
+        for j in range(len(string)):
+            if string[i] == string[j]:
 
-            if not parent:
-                parent = add_node(char, root)
-            else:
-                parent = add_node(char, parent)
+                k = 0
+                while i + k < len(string) and j + k < len(string):
+                    if string[i + k] == string[j + k]:
+                        word = string[j:j + k + 1]
+                        if len(word.strip()) > 0:
+                            if is_vowel(word):
+                                stat = freq_kevin.get(word)
+                                if stat:
+                                    stat["count"] += 1
+                                else:
+                                    freq_kevin[word] = {
+                                        "count": 1,
+                                    }
+                            else:
+                                stat = freq_stuart.get(word)
+                                if stat:
+                                    stat["count"] += 1
+                                else:
+                                    freq_stuart[word] = {
+                                        "count": 1,
+                                    }
+                                print(word, freq_stuart.get(word)["count"], i, j, k)
 
-
-def traverse(init_char, parent):
-    stack = [{"char": init_char, "parent": parent}]
-    count = 0
-
-    while stack:
-        current = stack.pop()
-
-        char = current["char"]
-        parent = current["parent"]
-
-        node = parent.get(char)
-        count += node[COUNT]
-
-        for _, char2 in enumerate(node.keys()):
-            if char2 == COUNT:
-                continue
-
-            stack.append({"char": char2, "parent": node})
-
-    return count
+                        k += 1
+                    else:
+                        print("break")
+                        break
+    print(freq_stuart)
 
 
 def minion_game(string):
-    build_tree(string)
-
     global stuart
     global kevin
-    global root
 
-    for _, key in enumerate(root.keys()):
-        if is_vowel(key):
-            kevin += traverse(key, root)
-        else:
-            stuart += traverse(key, root)
+    scan(string)
 
     if stuart > kevin:
         print(f"Stuart {stuart}")
@@ -95,6 +66,8 @@ def minion_game(string):
         print(f"Kevin {kevin}")
     else:
         print("Draw")
+
+    print(f"Kevin {kevin}, Stuart {stuart}")
 
 
 if __name__ == '__main__':
