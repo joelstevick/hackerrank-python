@@ -45,13 +45,15 @@ def scan(string):
                                     freq_stuart[word] = {
                                         "count": 1,
                                     }
-                                print(word, freq_stuart.get(word)["count"], i, j, k)
-
                         k += 1
                     else:
-                        print("break")
                         break
-    print(freq_stuart)
+                break
+    # score
+    for word in freq_stuart.keys():
+        stuart += freq_stuart[word]["count"]
+    for word in freq_kevin.keys():
+        kevin += freq_kevin[word]["count"]
 
 
 def minion_game(string):
@@ -66,8 +68,6 @@ def minion_game(string):
         print(f"Kevin {kevin}")
     else:
         print("Draw")
-
-    print(f"Kevin {kevin}, Stuart {stuart}")
 
 
 if __name__ == '__main__':
